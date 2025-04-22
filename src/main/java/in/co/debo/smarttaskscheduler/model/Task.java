@@ -13,6 +13,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,15 +28,18 @@ import lombok.Setter;
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long taskId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
+    @NotBlank(message = "Title is required")
+    @Size(min = 3, max = 100)
     private String title;
 
+    @Size(max = 500)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -42,6 +48,7 @@ public class Task {
     private LocalDateTime deadline;
 
     @Column(name = "effort_hours")
+    @Positive(message = "Effort must be positive")
     private Integer effortHours;
 
     @Enumerated(EnumType.STRING)
